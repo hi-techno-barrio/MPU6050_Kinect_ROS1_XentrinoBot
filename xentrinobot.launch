@@ -15,6 +15,24 @@
     <remap from="/right_encoder" to="/right_wheel/encoder"/>
   </node>
 
+  <node pkg="robot_controller" type="imu" name="imu">
+    <remap from="/imu/data" to="/imu/data_raw"/>
+  </node>
+
+  <node pkg="freenect_launch" type="freenect.launch" name="freenect">
+    <param name="camera" value="kinect"/>
+    <param name="depth_registration" value="true"/>
+    <param name="publish_tf" value="true"/>
+    <param name="depth_camera_info_url" value="file:///path/to/depth_camera.yaml"/>
+    <param name="rgb_camera_info_url" value="file:///path/to/rgb_camera.yaml"/>
+  </node>
+
+  <node pkg="robot_controller" type="kinect_fusion" name="kinect_fusion">
+    <remap from="/kinect/image" to="/camera/depth_registered/image"/>
+    <remap from="/imu/data" to="/imu/data_raw"/>
+    <remap from="/motor/cmd_vel" to="/cmd_vel"/>
+  </node>
+
   <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
     <remap from="/imu/data" to="/imu/data_raw"/>
     <remap from="/imu" to="/imu/data_raw"/>
@@ -28,3 +46,4 @@
     <param name="imu0_config" value="0 0 0  0 0 0  0 0 0"/>
   </node>
 </launch>
+
