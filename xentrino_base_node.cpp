@@ -33,22 +33,73 @@ public:
         angular_velocity_ = msg->angular_velocity.z;
     }
 
-    void kinectCallback(const sensor_msgs::Image::ConstPtr& msg)
-    {
-        int height = msg->height;
-        int width = msg->width;
+  void kinectCallback(const sensor_msgs::Image::ConstPtr& msg)
+{
+    int height = msg->height;
+    int width = msg->width;
 
-        // Process Kinect data here
-        for (int i = 0; i < height; i++)
+    // Calculate the center pixel indices
+    int center_i = height/2;
+    int center_j = width/2;
+
+    // Extract the depth data from the image message
+    uint16_t* depth_data = (uint16_t*)&msg->data[0];
+
+    // Calculate the depth value at the center of the image
+    uint16_t center_depth = depth_data[center_i * width + center_j];
+
+    // Convert the depth value to meters
+    double center_distance = center_depth * 0.001;
+
+    // Detect obstacles in front of the robot
+    const double MIN_OBSTACLE_DISTANCE = 0.2;
+    const double MAX_OBSTACLE_DISTANCE = 2.0;
+    const double OBSTACLE_THRESHOLD = 0.5;
+    bool obstacle_detected = false;
+
+    for (int i = center_i - 20; i <= center_i + 20; i++)
+    {
+        for (int j = center_j - 20; j <= center_j + 20; j++)
         {
-            for (int j = 0; j < width; j++)
+            // Calculate the depth value at this pixel
+            uint16_t depth = depth_data[i * width + j];
+
+            // Convert the depth value to meters
+            double distance = depth * 0.001;
+
+            // Check if the distance is within the min and max range
+            if (distance >= MIN_OBSTACLE_DISTANCE && distance <= MAX_OBSTACLE_DISTANCE)
             {
-                // Access depth data at (i, j)
-                uint16_t depth = msg->data[i * width + j];
-                // Process depth data
+                // Calculate the difference in distance from the center
+                double distance_diff = std::abs(center_distance - distance);
+
+                // Check if the difference is greater than the threshold
+                if (distance_diff > OBSTACLE_THRESHOLD)
+                {
+                    // Obstacle detected!
+                    obstacle_detected = true;
+                    break;
+                }
             }
         }
+
+        if (obstacle_detected)
+        {
+            break;
+        }
     }
+
+    // Print the obstacle detection result
+    if (obstacle_detected)
+    {
+        ROS_INFO("Obstacle detected!");
+    }
+    else
+    {
+        ROS_INFO("No obstacles detected.");
+    }
+}
+
 
     void leftWheelVelocityCallback(const std_msgs::Float64::ConstPtr& msg)
     {
