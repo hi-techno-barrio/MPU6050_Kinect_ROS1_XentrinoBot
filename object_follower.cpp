@@ -1,5 +1,15 @@
 /*
 
+This C++ code is similar to the previous Python code, but uses the OpenCV and libfreenect libraries to capture the image and depth data from the Kinect sensor. 
+The code defines a binary mask for the target color, finds the contour with the largest area in the binary mask, and calculates the centroid of the contour.
+
+The code calculates the depth at the centroid of the contour, and calculates the position of the centroid in 3D space using the intrinsic parameters of 
+the Kinect camera. It then calculates the error between the target position and the current position, and calculates the angular and linear velocities
+based on the error and the depth.
+
+Finally, the code displays the image and mask for visualization, and sends the motor commands to control the robot based on the angular and linear 
+velocities.
+
 
 */
 
