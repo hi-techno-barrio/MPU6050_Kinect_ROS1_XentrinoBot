@@ -1,7 +1,10 @@
 /*
-This code captures an image from the Kinect sensor, converts it to HSV color space, and defines a binary mask for the target color. It then finds the contour with the largest area in the binary mask, calculates the centroid of the contour, and calculates the position of the centroid in 3D space using the depth data from the Kinect sensor.
+This code captures an image from the Kinect sensor, converts it to HSV color space, and defines a binary mask for the target color. It then finds the contour 
+with the largest area in the binary mask, calculates the centroid of the contour, and calculates the position of the centroid in 3D space using the depth 
+data from the Kinect sensor.
 
-The code calculates the error between the target position and the current position, and calculates the angular velocity based on the error. It also calculates the linear velocity based on the depth at the centroid of the contour.
+The code calculates the error between the target position and the current position, and calculates the angular velocity based on the error. It also calculates 
+the linear velocity based on the depth at the centroid of the contour.
 
 Finally, the code sends the motor c
 */
